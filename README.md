@@ -1,4 +1,4 @@
-# NTAA — Not That App Again
+# NTAA - Not That App Again
 
 1. Put both EXE files in the folder with your `card_data_*` and/or `en_*` bundles.
 2. Run `NTAA-Extract.exe` to get `Cards.json` and `English.csv`.
