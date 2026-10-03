@@ -13,7 +13,7 @@ int exitCode = 0;
 try
 {
     if (args.Any(a => a is "--help" or "-h"))
-        Console.WriteLine("NTAA - Not That App Again\nRun in the folder containing card_data* and/or en_* bundles.\nExtract writes Cards.json / English.csv. Import reads C*.json / *.csv.\nUse --no-pause for scripts.");
+        Console.WriteLine("NTAA - Not That App Again\nRun in the folder containing card_data* and/or en_* bundles.\nExtract writes Cards.json / English.csv. Import reads the first *.json / one *.csv.\nUse --no-pause for scripts.");
     else
     {
         if (args.Any(a => a != "--no-pause"))
@@ -52,13 +52,13 @@ static void Run(bool importing)
     bool Ends(string name, string suffix) => name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
     var card = One("card_data bundles", n => Starts(n, "card_data"));
     var en = One("en_ bundles", n => Starts(n, "en_"));
-    var json = One("C*.json files", n => Starts(n, "C") && Ends(n, ".json"));
+    var json = files.FirstOrDefault(p => Ends(Path.GetFileName(p), ".json"));
     var csv = One("CSV files", n => Ends(n, ".csv"));
     if (card == null && en == null)
         throw new InvalidDataException("No bundles found. Put a card_data* or en_* bundle in this folder.");
     if (importing)
     {
-        if (card != null && json == null) throw new InvalidDataException("Missing C*.json file for the card_data bundle.");
+        if (card != null && json == null) throw new InvalidDataException("Missing JSON file for the card_data bundle.");
         if (en != null && csv == null) throw new InvalidDataException("Missing CSV file for the en_ bundle.");
         if (json != null && card == null) throw new InvalidDataException("Missing card_data bundle for the JSON file.");
         if (csv != null && en == null) throw new InvalidDataException("Missing en_ bundle for the CSV file.");
